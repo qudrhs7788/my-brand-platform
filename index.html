@@ -4,50 +4,46 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>생활 계산기</title>
-<meta name="description" content="육아휴직 급여처럼 헷갈리는 생활 속 금액을 바로 계산해 주는 무료 계산기 모음입니다.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@700&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg: #f3f6f4; --surface: #ffffff; --ink: #17302b; --muted: #5b6f6a;
-  --line: #d5dfdb; --accent: #0f6e5c;
-  --font-display: "Gowun Batang", "Noto Serif KR", serif;
-  --font-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #101816; --surface: #18231f; --ink: #e6efec; --muted: #9db0aa;
-    --line: #2c3b36; --accent: #5cc7ae; color-scheme: dark;
-  }
-}
-* { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.6; }
-main { max-width: 640px; margin: 0 auto; padding: 28px 16px 56px; display: flex; flex-direction: column; gap: 20px; }
-h1 { font-family: var(--font-display); font-size: 28px; line-height: 1.25; margin: 0; }
-p { margin: 0; }
-.lede { color: var(--muted); font-size: 15px; }
-ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
-.item { display: block; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; text-decoration: none; color: inherit; }
-.item:hover, .item:focus-visible { border-color: var(--accent); outline: none; }
-.item strong { display: block; font-size: 17px; font-weight: 600; color: var(--accent); }
-.item span { font-size: 14px; color: var(--muted); }
-</style>
+<meta name="description" content="연봉 실수령액, 연말정산 환급액, 3.3% 세금, 육아휴직 급여를 바로 계산하고 2026년 연봉 실수령액 표와 4대보험 요율을 확인하세요.">
+<link rel="canonical" href="https://qudrhs7788.github.io/my-brand-platform/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="생활 계산기">
+<meta property="og:description" content="연봉 실수령액, 연말정산 환급액, 3.3% 세금, 육아휴직 급여를 바로 계산하고 2026년 연봉 실수령액 표와 4대보험 요율을 확인하세요.">
+<meta property="og:url" content="https://qudrhs7788.github.io/my-brand-platform/">
+<meta property="og:site_name" content="생활 계산기">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-<main>
-  <header style="display:flex;flex-direction:column;gap:8px">
-    <h1>생활 계산기</h1>
-    <p class="lede">헷갈리는 생활 속 금액을 바로 계산해 드립니다. 가입 없이 무료로 쓸 수 있습니다.</p>
-  </header>
-  <ul>
-    <li>
-      <a class="item" href="parental-leave/">
-        <strong>육아휴직 급여 계산기</strong>
-        <span>2026년 기준. 일반, 6+6 부모육아휴직제, 한부모 월별 금액과 총액</span>
-      </a>
-    </li>
+<header class="top"><div class="top-in">
+  <a class="brand" href="./"><i></i>생활 계산기</a>
+  <nav><a href="salary/">실수령액</a><a href="year-end-tax/">연말정산</a><a href="salary-table/">연봉표</a></nav>
+</div></header>
+<main class="wrap">
+<section class="hero">
+    <span class="eyebrow">2026년 기준</span>
+    <h1>월급과 세금,<br>바로 계산해 보세요</h1>
+    <p class="lede">가입도 설치도 필요 없습니다. 숫자만 넣으면 결과가 바로 나옵니다.</p>
+  </section>
+  <h2 class="section-title">계산기</h2>
+  <ul class="tiles">
+    <li><a class="tile" href="salary/"><span class="tag">계산기</span><strong>연봉 실수령액 계산기</strong><span class="d">연봉이나 월급을 넣으면 4대보험과 세금을 뺀 월 실수령액을 보여줍니다.</span></a></li>
+    <li><a class="tile" href="year-end-tax/"><span class="tag">계산기</span><strong>연말정산 환급액 계산기</strong><span class="d">총급여와 카드 사용액, 월세 등을 넣어 환급액 또는 추가 납부액을 미리 봅니다.</span></a></li>
+    <li><a class="tile" href="freelancer-tax/"><span class="tag">계산기</span><strong>프리랜서 3.3% 세금 계산기</strong><span class="d">계약 금액에서 3.3%를 뗀 실수령액, 또는 받을 금액에 맞는 계약 금액을 계산합니다.</span></a></li>
+    <li><a class="tile" href="parental-leave/"><span class="tag">계산기</span><strong>육아휴직 급여 계산기</strong><span class="d">일반, 6+6 부모육아휴직제, 한부모 기준으로 달마다 받는 급여와 총액을 계산합니다.</span></a></li>
   </ul>
+  <h2 class="section-title">한눈에 보는 정보</h2>
+  <ul class="tiles">
+    <li><a class="tile" href="salary-table/"><span class="tag">정보</span><strong>2026 연봉 실수령액 표</strong><span class="d">연봉 2,000만원부터 2억원까지, 4대보험과 세금을 뺀 월 실수령액을 한 표로 정리했습니다.</span></a></li>
+    <li><a class="tile" href="insurance-rates/"><span class="tag">정보</span><strong>2026 4대보험 요율표</strong><span class="d">국민연금, 건강보험, 장기요양, 고용보험의 근로자·회사 부담 요율과 월급별 보험료.</span></a></li>
+  </ul>
+
+<footer class="foot">
+  <p>계산 결과는 참고용 예상 금액이며 실제 금액과 다를 수 있습니다.</p>
+  <p>기준: 2026년 11월 현재 시행 중인 요율과 세법 · <a href="./">생활 계산기 전체 보기</a></p>
+</footer>
 </main>
+
 </body>
 </html>

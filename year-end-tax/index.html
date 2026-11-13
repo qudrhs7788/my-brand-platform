@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>연말정산 예상 환급액 계산기 | 생활 계산기</title>
+<meta name="description" content="총급여, 신용카드 사용액, 연금저축, 월세 등 주요 항목으로 연말정산 예상 환급액과 추가 납부 세액을 미리 계산합니다.">
+<link rel="canonical" href="https://qudrhs7788.github.io/my-brand-platform/year-end-tax/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="연말정산 예상 환급액 계산기">
+<meta property="og:description" content="총급여, 신용카드 사용액, 연금저축, 월세 등 주요 항목으로 연말정산 예상 환급액과 추가 납부 세액을 미리 계산합니다.">
+<meta property="og:url" content="https://qudrhs7788.github.io/my-brand-platform/year-end-tax/">
+<meta property="og:site_name" content="생활 계산기">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <a class="brand" href="../"><i></i>생활 계산기</a>
+  <nav><a href="../salary/">실수령액</a><a href="../year-end-tax/">연말정산</a><a href="../salary-table/">연봉표</a></nav>
+</div></header>
+<main class="wrap">
+<section class="hero">
+    <span class="eyebrow">13월의 월급 미리 보기</span>
+    <h1>연말정산 환급액 계산기</h1>
+    <p class="lede">주요 항목만 넣어도 돌려받을지, 더 낼지 대략 알 수 있습니다.</p>
+  </section>
+  <section class="card" aria-label="입력">
+    <div class="field">
+      <label for="total">총급여 (연봉에서 비과세를 뺀 금액)</label>
+      <div class="inputwrap"><input id="total" data-money type="text" inputmode="numeric" autocomplete="off" value="5,000" placeholder="0"><span class="unit">만원</span></div>
+      <div class="quick"><button type="button" data-for="total" data-v="3000">3,000만</button><button type="button" data-for="total" data-v="4000">4,000만</button><button type="button" data-for="total" data-v="5000">5,000만</button><button type="button" data-for="total" data-v="7000">7,000만</button><button type="button" data-for="total" data-v="10000">1억</button></div>
+    </div>
+    <div class="grid2">
+    <div class="field">
+      <span class="label" id="family-l">부양가족 수 (본인 포함)</span>
+      <div class="stepper" data-min="1" data-max="11" role="group" aria-labelledby="family-l">
+        <button type="button" data-d="-1" aria-label="부양가족 수 (본인 포함) 줄이기">−</button>
+        <output id="family">1</output>
+        <button type="button" data-d="1" aria-label="부양가족 수 (본인 포함) 늘리기">+</button>
+      </div>
+    </div>
+    <div class="field">
+      <span class="label" id="kids-l">8세 이상 자녀 수</span>
+      <div class="stepper" data-min="0" data-max="10" role="group" aria-labelledby="kids-l">
+        <button type="button" data-d="-1" aria-label="8세 이상 자녀 수 줄이기">−</button>
+        <output id="kids">0</output>
+        <button type="button" data-d="1" aria-label="8세 이상 자녀 수 늘리기">+</button>
+      </div>
+    </div>
+    </div>
+    <div class="grid2">
+    <div class="field">
+      <label for="credit">신용카드 (연)</label>
+      <div class="inputwrap"><input id="credit" data-money type="text" inputmode="numeric" autocomplete="off" value="1,500" placeholder="0"><span class="unit">만원</span></div>
+    </div>
+    <div class="field">
+      <label for="debit">체크카드·현금영수증 (연)</label>
+      <div class="inputwrap"><input id="debit" data-money type="text" inputmode="numeric" autocomplete="off" value="500" placeholder="0"><span class="unit">만원</span></div>
+    </div>
+    </div>
+    <details class="more">
+      <summary>공제 항목 더 넣기</summary>
+      <div class="inner">
+        <div class="grid2">
+        <div class="field">
+      <label for="market">전통시장·대중교통 (연)</label>
+      <div class="inputwrap"><input id="market" data-money type="text" inputmode="numeric" autocomplete="off" value="" placeholder="0"><span class="unit">만원</span></div>
+    </div>
+        <div class="field">
+      <label for="rent">월세 낸 금액 (연)</label>
+      <div class="inputwrap"><input id="rent" data-money type="text" inputmode="numeric" autocomplete="off" value="" placeholder="0"><span class="unit">만원</span></div>
+      <p class="hint">무주택 세대주, 총급여 8,000만원 이하</p>
+    </div>
+        <div class="field">
+      <label for="psave">연금저축 납입액 (연)</label>
+      <div class="inputwrap"><input id="psave" data-money type="text" inputmode="numeric" autocomplete="off" value="" placeholder="0"><span class="unit">만원</span></div>
+      <p class="hint">600만원까지</p>
+    </div>
+        <div class="field">
+      <label for="irp">IRP 납입액 (연)</label>
+      <div class="inputwrap"><input id="irp" data-money type="text" inputmode="numeric" autocomplete="off" value="" placeholder="0"><span class="unit">만원</span></div>
+      <p class="hint">연금저축과 합쳐 900만원까지</p>
+    </div>
+        <div class="field">
+      <label for="medical">의료비 (연)</label>
+      <div class="inputwrap"><input id="medical" data-money type="text" inputmode="numeric" autocomplete="off" value="" placeholder="0"><span class="unit">만원</span></div>
+      <p class="hint">총급여의 3%를 넘는 금액만 공제</p>
+    </div>
+        <div class="field">
+      <label for="edu">교육비 (연)</label>
+      <div class="inputwrap"><input id="edu" data-money type="text" inputmode="numeric" autocomplete="off" value="" placeholder="0"><span class="unit">만원</span></div>
+    </div>
+        <div class="field">
+      <label for="ins">보장성 보험료 (연)</label>
+      <div class="inputwrap"><input id="ins" data-money type="text" inputmode="numeric" autocomplete="off" value="" placeholder="0"><span class="unit">만원</span></div>
+      <p class="hint">100만원까지</p>
+    </div>
+        <div class="field">
+      <label for="don">기부금 (연)</label>
+      <div class="inputwrap"><input id="don" data-money type="text" inputmode="numeric" autocomplete="off" value="" placeholder="0"><span class="unit">만원</span></div>
+    </div>
+        </div>
+        <div class="field">
+      <label for="paid">올해 월급에서 뗀 소득세 합계</label>
+      <div class="inputwrap"><input id="paid" data-money type="text" inputmode="numeric" autocomplete="off" value="" placeholder="0"><span class="unit">만원</span></div>
+      <p class="hint">비워 두면 간이세액표 기준으로 자동 계산합니다. 급여명세서의 소득세를 모두 더한 금액입니다.</p>
+    </div>
+      </div>
+    </details>
+  </section>
+  <section class="result" id="box" aria-live="polite">
+    <span class="label" id="rlabel">예상 환급액</span>
+    <span class="big" id="refund">0원</span>
+    <span class="sub" id="rsub"></span>
+  </section>
+  <section class="card">
+    <h2>계산 내역</h2>
+    <ul class="rows" id="rows"></ul>
+    <p class="hint" id="tip"></p>
+  </section>
+  <section class="card faq">
+    <h2>자주 묻는 질문</h2>
+    <div><h3>신용카드를 얼마나 써야 공제받나요?</h3><p>카드와 현금영수증 사용액이 총급여의 25%를 넘어야 하고, 넘는 금액에 대해서만 공제됩니다. 공제율은 신용카드 15%, 체크카드와 현금영수증 30%, 전통시장과 대중교통 40%입니다.</p></div>
+    <div><h3>환급액을 늘리는 가장 쉬운 방법은?</h3><p>연말 전에 할 수 있는 것은 연금저축과 IRP 납입입니다. 합쳐서 900만원까지 납입액의 13.2%(총급여 5,500만원 이하는 16.5%)를 세금에서 빼줍니다.</p></div>
+    <div><h3>월세 세액공제 조건은?</h3><p>총급여 8,000만원 이하 무주택 세대주가 국민주택규모 또는 기준시가 4억원 이하 주택에 살면서 전입신고를 한 경우, 연 1,000만원까지 월세의 15%(총급여 5,500만원 이하는 17%)를 공제받습니다.</p></div>
+  </section>
+<nav class="related" aria-label="다른 페이지"><a href="../salary/">연봉 실수령액 계산기</a><a href="../freelancer-tax/">프리랜서 3.3% 세금 계산기</a><a href="../parental-leave/">육아휴직 급여 계산기</a><a href="../salary-table/">2026 연봉 실수령액 표</a><a href="../insurance-rates/">2026 4대보험 요율표</a></nav>
+<footer class="foot">
+  <p>주요 공제 항목만 반영한 어림 계산입니다. 주택자금, 중소기업 취업자 감면 등은 포함하지 않았으며 실제 결과는 국세청 홈택스 연말정산 미리보기로 확인하세요.</p>
+  <p>기준: 2026년 11월 현재 시행 중인 요율과 세법 · <a href="../">생활 계산기 전체 보기</a></p>
+</footer>
+</main>
+<script src="../assets/tax.js"></script>
+<script src="../assets/ui.js"></script>
+<script>
+function render() {
+  var M = 10000, w = TAX.won;
+  var fam = UI.step("family"), kids = Math.min(UI.step("kids"), Math.max(0, fam - 1));
+  document.getElementById("kids").textContent = kids;
+  var paidEl = document.getElementById("paid");
+  var o = { total: UI.num("total") * M, family: fam, kids: kids, credit: UI.num("credit") * M, debit: UI.num("debit") * M,
+    market: UI.num("market") * M, rent: UI.num("rent") * M, pensionSaving: UI.num("psave") * M, irp: UI.num("irp") * M,
+    medical: UI.num("medical") * M, education: UI.num("edu") * M, insurancePremium: UI.num("ins") * M, donation: UI.num("don") * M,
+    paid: paidEl.value.trim() === "" ? null : UI.num("paid") * M };
+  var box = document.getElementById("box");
+  if (o.total <= 0) {
+    box.className = "result";
+    document.getElementById("rlabel").textContent = "예상 환급액";
+    document.getElementById("refund").textContent = "0원";
+    document.getElementById("rsub").textContent = "총급여를 입력하세요.";
+    document.getElementById("rows").innerHTML = ""; document.getElementById("tip").textContent = "";
+    return;
+  }
+  var r = TAX.yearEnd(o);
+  var plus = r.refund >= 0;
+  box.className = "result " + (plus ? "plus" : "minus");
+  document.getElementById("rlabel").textContent = plus ? "예상 환급액 (돌려받는 돈)" : "예상 추가 납부액 (더 내는 돈)";
+  document.getElementById("refund").textContent = w(Math.abs(r.refund));
+  document.getElementById("rsub").textContent = "지방소득세 포함 · 이미 낸 세금 " + w(r.paidIncome + r.paidLocal);
+  var rows = [["근로소득공제", r.earnedDeduction], ["인적공제", r.personal], ["국민연금 보험료 공제", r.pensionYear],
+    ["건강·고용보험료 공제", r.healthYear], ["신용카드 등 소득공제", r.card], ["과세표준", r.base, 1], ["산출세액", r.tax, 1]];
+  r.credits.forEach(function (c) { rows.push([c.name, c.amount]); });
+  rows.push(["결정세액 (소득세)", r.finalIncome, 1], ["지방소득세", r.finalLocal], ["이미 낸 소득세", r.paidIncome], ["이미 낸 지방소득세", r.paidLocal]);
+  document.getElementById("rows").innerHTML = rows.map(function (x) {
+    return '<li' + (x[2] ? ' class="sum"' : '') + '><span class="k">' + x[0] + '</span><span class="v">' + w(x[1]) + '</span></li>';
+  }).join("");
+  document.getElementById("tip").textContent = "현재 과세표준 구간의 세율은 " + Math.round(r.rate * 100) + "%입니다. 소득공제가 100만원 늘면 세금이 약 " + w(M * 100 * r.rate * 1.1) + " 줄어듭니다.";
+}
+UI.init(render);
+</script>
+</body>
+</html>

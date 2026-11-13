@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2026 연봉 실수령액 계산기 | 생활 계산기</title>
+<meta name="description" content="2026년 4대보험 요율과 근로소득 간이세액표를 반영한 연봉 실수령액 계산기. 국민연금, 건강보험, 소득세를 뺀 월급을 바로 확인하세요.">
+<link rel="canonical" href="https://qudrhs7788.github.io/my-brand-platform/salary/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="2026 연봉 실수령액 계산기">
+<meta property="og:description" content="2026년 4대보험 요율과 근로소득 간이세액표를 반영한 연봉 실수령액 계산기. 국민연금, 건강보험, 소득세를 뺀 월급을 바로 확인하세요.">
+<meta property="og:url" content="https://qudrhs7788.github.io/my-brand-platform/salary/">
+<meta property="og:site_name" content="생활 계산기">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <a class="brand" href="../"><i></i>생활 계산기</a>
+  <nav><a href="../salary/">실수령액</a><a href="../year-end-tax/">연말정산</a><a href="../salary-table/">연봉표</a></nav>
+</div></header>
+<main class="wrap">
+<section class="hero">
+    <span class="eyebrow">2026년 요율 반영</span>
+    <h1>연봉 실수령액 계산기</h1>
+    <p class="lede">4대보험과 소득세를 빼고 매달 통장에 들어오는 금액을 계산합니다.</p>
+  </section>
+  <section class="card" aria-label="입력">
+    <fieldset><legend>입력 기준</legend>
+      <div class="seg">
+        <label><input type="radio" name="mode" value="year" checked><span>연봉</span></label>
+        <label><input type="radio" name="mode" value="month"><span>월급</span></label>
+      </div>
+    </fieldset>
+    <div class="field">
+      <label for="pay">세전 금액</label>
+      <div class="inputwrap"><input id="pay" data-money type="text" inputmode="numeric" autocomplete="off" value="4,000" placeholder="0"><span class="unit">만원</span></div>
+      <div class="quick"><button type="button" data-for="pay" data-v="3000">3,000만</button><button type="button" data-for="pay" data-v="4000">4,000만</button><button type="button" data-for="pay" data-v="5000">5,000만</button><button type="button" data-for="pay" data-v="6000">6,000만</button><button type="button" data-for="pay" data-v="8000">8,000만</button><button type="button" data-for="pay" data-v="10000">1억</button></div>
+    </div>
+    <div class="grid2">
+    <div class="field">
+      <span class="label" id="family-l">부양가족 수 (본인 포함)</span>
+      <div class="stepper" data-min="1" data-max="11" role="group" aria-labelledby="family-l">
+        <button type="button" data-d="-1" aria-label="부양가족 수 (본인 포함) 줄이기">−</button>
+        <output id="family">1</output>
+        <button type="button" data-d="1" aria-label="부양가족 수 (본인 포함) 늘리기">+</button>
+      </div>
+    </div>
+    <div class="field">
+      <span class="label" id="kids-l">8~20세 자녀 수</span>
+      <div class="stepper" data-min="0" data-max="10" role="group" aria-labelledby="kids-l">
+        <button type="button" data-d="-1" aria-label="8~20세 자녀 수 줄이기">−</button>
+        <output id="kids">0</output>
+        <button type="button" data-d="1" aria-label="8~20세 자녀 수 늘리기">+</button>
+      </div>
+    </div>
+    </div>
+    <div class="field">
+      <label for="nontax">비과세 금액 (월)</label>
+      <div class="inputwrap"><input id="nontax" data-money type="text" inputmode="numeric" autocomplete="off" value="20" placeholder="0"><span class="unit">만원</span></div>
+      <p class="hint">식대는 월 20만원까지 세금을 내지 않습니다. 없으면 0을 넣으세요.</p>
+    </div>
+  </section>
+  <section class="result" aria-live="polite">
+    <span class="label">월 예상 실수령액</span>
+    <span class="big" id="net">0원</span>
+    <span class="sub" id="netsub"></span>
+  </section>
+  <section class="card">
+    <h2>매달 빠지는 금액</h2>
+    <ul class="rows" id="rows"></ul>
+  </section>
+  <section class="card prose">
+    <h2>어떻게 계산하나요</h2>
+    <p>4대보험은 2026년 근로자 부담 요율(국민연금 4.75%, 건강보험 3.595%, 장기요양보험은 건강보험료의 약 13.14%, 고용보험 0.9%)을 적용합니다. 국민연금은 월 659만원까지만 보험료를 매깁니다.</p>
+    <p>소득세는 회사가 매달 떼는 기준인 근로소득 간이세액표(2026년 3월 시행분)의 계산 방식을 그대로 따릅니다. 지방소득세는 소득세의 10%입니다.</p>
+  </section>
+  <section class="card faq">
+    <h2>자주 묻는 질문</h2>
+    <div><h3>급여명세서와 금액이 조금 다른데요?</h3><p>회사마다 비과세 수당, 상여금 지급 방식, 건강보험 정산이 달라 차이가 날 수 있습니다. 소득세를 80%나 120%로 선택한 경우에도 달라집니다.</p></div>
+    <div><h3>부양가족 수는 어떻게 세나요?</h3><p>본인을 포함해 연말정산에서 기본공제를 받는 가족 수입니다. 혼자라면 1명, 소득이 없는 배우자가 있으면 2명입니다.</p></div>
+    <div><h3>여기서 뗀 세금이 최종 세금인가요?</h3><p>아닙니다. 매달 떼는 세금은 어림한 금액이고, 다음 해 연말정산에서 실제 세금과 비교해 돌려받거나 더 냅니다.</p></div>
+  </section>
+<nav class="related" aria-label="다른 페이지"><a href="../year-end-tax/">연말정산 환급액 계산기</a><a href="../freelancer-tax/">프리랜서 3.3% 세금 계산기</a><a href="../parental-leave/">육아휴직 급여 계산기</a><a href="../salary-table/">2026 연봉 실수령액 표</a><a href="../insurance-rates/">2026 4대보험 요율표</a></nav>
+<footer class="foot">
+  <p>계산 결과는 참고용 예상 금액이며 실제 금액과 다를 수 있습니다.</p>
+  <p>기준: 2026년 11월 현재 시행 중인 요율과 세법 · <a href="../">생활 계산기 전체 보기</a></p>
+</footer>
+</main>
+<script src="../assets/tax.js"></script>
+<script src="../assets/ui.js"></script>
+<script>
+function render() {
+  var mode = UI.radio("mode"), pay = UI.num("pay") * 10000;
+  var annual = mode === "year" ? pay : pay * 12;
+  var fam = UI.step("family"), kids = Math.min(UI.step("kids"), Math.max(0, fam - 1));
+  document.getElementById("kids").textContent = kids;
+  var r = TAX.netPay({ annual: annual, nontaxMonthly: UI.num("nontax") * 10000, family: fam, kids: kids });
+  var w = TAX.won;
+  document.getElementById("net").textContent = w(Math.max(0, r.net));
+  document.getElementById("netsub").textContent = annual > 0 ? "1년 합계 약 " + w(Math.max(0, r.net) * 12) + " · 세전 월 " + w(r.gross) : "세전 금액을 입력하세요.";
+  var items = [["국민연금", "4.75%", r.ins.pension], ["건강보험", "3.595%", r.ins.health], ["장기요양보험", "건강보험료의 13.14%", r.ins.care],
+    ["고용보험", "0.9%", r.ins.employ], ["소득세", "간이세액표", r.incomeTax], ["지방소득세", "소득세의 10%", r.localTax]];
+  var html = items.map(function (i) { return '<li><span class="k">' + i[0] + ' <small>' + i[1] + '</small></span><span class="v">' + w(i[2]) + '</span></li>'; }).join("");
+  html += '<li class="sum"><span class="k">공제 합계</span><span class="v">' + w(r.deduct) + '</span></li>';
+  document.getElementById("rows").innerHTML = html;
+}
+UI.init(render);
+</script>
+</body>
+</html>

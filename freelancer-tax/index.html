@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>프리랜서 3.3% 세금 계산기 | 생활 계산기</title>
+<meta name="description" content="프리랜서·아르바이트 3.3% 원천징수 세금 계산기. 계약 금액에서 소득세 3%와 지방소득세 0.3%를 뺀 실수령액과 역계산을 지원합니다.">
+<link rel="canonical" href="https://qudrhs7788.github.io/my-brand-platform/freelancer-tax/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="프리랜서 3.3% 세금 계산기">
+<meta property="og:description" content="프리랜서·아르바이트 3.3% 원천징수 세금 계산기. 계약 금액에서 소득세 3%와 지방소득세 0.3%를 뺀 실수령액과 역계산을 지원합니다.">
+<meta property="og:url" content="https://qudrhs7788.github.io/my-brand-platform/freelancer-tax/">
+<meta property="og:site_name" content="생활 계산기">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <a class="brand" href="../"><i></i>생활 계산기</a>
+  <nav><a href="../salary/">실수령액</a><a href="../year-end-tax/">연말정산</a><a href="../salary-table/">연봉표</a></nav>
+</div></header>
+<main class="wrap">
+<section class="hero">
+    <span class="eyebrow">사업소득 원천징수</span>
+    <h1>프리랜서 3.3% 세금 계산기</h1>
+    <p class="lede">외주비, 강의료, 아르바이트비에서 3.3%를 떼면 얼마가 들어오는지 계산합니다.</p>
+  </section>
+  <section class="card" aria-label="입력">
+    <fieldset><legend>입력하는 금액</legend>
+      <div class="seg">
+        <label><input type="radio" name="mode" value="gross" checked><span>세전 (계약 금액)</span></label>
+        <label><input type="radio" name="mode" value="net"><span>세후 (받을 금액)</span></label>
+      </div>
+    </fieldset>
+    <div class="field">
+      <label for="amt">금액</label>
+      <div class="inputwrap"><input id="amt" data-money type="text" inputmode="numeric" autocomplete="off" value="1,000,000" placeholder="0"><span class="unit">원</span></div>
+      <div class="quick"><button type="button" data-for="amt" data-v="500000">50만</button><button type="button" data-for="amt" data-v="1000000">100만</button><button type="button" data-for="amt" data-v="2000000">200만</button><button type="button" data-for="amt" data-v="3000000">300만</button><button type="button" data-for="amt" data-v="5000000">500만</button></div>
+    </div>
+  </section>
+  <section class="result" aria-live="polite">
+    <span class="label" id="rlabel">실수령액</span>
+    <span class="big" id="out">0원</span>
+    <span class="sub" id="sub"></span>
+  </section>
+  <section class="card">
+    <h2>계산 내역</h2>
+    <ul class="rows" id="rows"></ul>
+  </section>
+  <section class="card prose">
+    <h2>3.3%는 무엇인가요</h2>
+    <p>회사에 소속되지 않고 일한 대가(사업소득)를 받을 때, 주는 쪽이 소득세 3%와 지방소득세 0.3%를 미리 떼고 지급합니다. 뗀 세금은 주는 쪽이 대신 국세청에 냅니다.</p>
+    <p>이 3.3%는 미리 낸 세금입니다. 다음 해 5월 종합소득세 신고 때 실제 세금을 계산해서, 미리 낸 금액이 더 많으면 돌려받습니다. 소득이 적은 프리랜서는 환급받는 경우가 많습니다.</p>
+  </section>
+  <section class="card faq">
+    <h2>자주 묻는 질문</h2>
+    <div><h3>금액이 작으면 세금을 안 떼나요?</h3><p>소득세가 1,000원 미만이면 떼지 않습니다. 지급액 기준으로 약 33,330원 이하일 때입니다.</p></div>
+    <div><h3>3.3%와 8.8%는 뭐가 다른가요?</h3><p>계속 반복하는 일은 사업소득으로 3.3%를 뗍니다. 한두 번 하는 강연이나 원고료 같은 기타소득은 필요경비 60%를 뺀 금액의 22%, 즉 지급액의 8.8%를 뗍니다.</p></div>
+    <div><h3>4대보험도 빠지나요?</h3><p>3.3%를 떼는 프리랜서 계약에서는 회사가 4대보험을 떼지 않습니다. 국민연금과 건강보험은 지역가입자로 따로 냅니다.</p></div>
+  </section>
+<nav class="related" aria-label="다른 페이지"><a href="../salary/">연봉 실수령액 계산기</a><a href="../year-end-tax/">연말정산 환급액 계산기</a><a href="../parental-leave/">육아휴직 급여 계산기</a><a href="../salary-table/">2026 연봉 실수령액 표</a><a href="../insurance-rates/">2026 4대보험 요율표</a></nav>
+<footer class="foot">
+  <p>계산 결과는 참고용 예상 금액이며 실제 금액과 다를 수 있습니다.</p>
+  <p>기준: 2026년 11월 현재 시행 중인 요율과 세법 · <a href="../">생활 계산기 전체 보기</a></p>
+</footer>
+</main>
+<script src="../assets/tax.js"></script>
+<script src="../assets/ui.js"></script>
+<script>
+function calc(g) {
+  var it = TAX.floor10(g * 0.03);
+  if (it < 1000) it = 0;
+  var lt = TAX.floor10(it * 0.1);
+  return { gross: g, income: it, local: lt, net: g - it - lt };
+}
+function render() {
+  var mode = UI.radio("mode"), v = UI.num("amt"), w = TAX.won, r;
+  if (mode === "gross") r = calc(v);
+  else {
+    var g = Math.round(v / 0.967); r = calc(g);
+    for (var i = 0; i < 40 && r.net < v; i++) { g += 10; r = calc(g); }
+    if (calc(v).income === 0) r = calc(v);
+  }
+  document.getElementById("rlabel").textContent = mode === "gross" ? "실수령액" : "필요한 계약 금액 (세전)";
+  document.getElementById("out").textContent = w(mode === "gross" ? r.net : r.gross);
+  document.getElementById("sub").textContent = v > 0 ? (mode === "gross" ? "떼는 세금 " + w(r.income + r.local) : "이 금액으로 계약하면 " + w(r.net) + "을 받습니다") : "금액을 입력하세요.";
+  document.getElementById("rows").innerHTML =
+    '<li><span class="k">계약 금액 (세전)</span><span class="v">' + w(r.gross) + '</span></li>' +
+    '<li><span class="k">소득세 <small>3%</small></span><span class="v">' + w(r.income) + '</span></li>' +
+    '<li><span class="k">지방소득세 <small>소득세의 10%</small></span><span class="v">' + w(r.local) + '</span></li>' +
+    '<li class="sum"><span class="k">실수령액</span><span class="v">' + w(r.net) + '</span></li>';
+}
+UI.init(render);
+</script>
+</body>
+</html>
