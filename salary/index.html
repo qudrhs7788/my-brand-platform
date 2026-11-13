@@ -27,6 +27,13 @@
     <p class="lede">4대보험과 소득세를 빼고 매달 통장에 들어오는 금액을 계산합니다.</p>
   </section>
   <section class="card" aria-label="입력">
+    <fieldset><legend>기준 연도</legend>
+      <div class="seg">
+        <label><input type="radio" name="yr" value="2026" checked><span>2026년</span></label>
+        <label><input type="radio" name="yr" value="2027"><span>2027년 (예상)</span></label>
+      </div>
+      <p class="note" id="yrnote" hidden>2027년은 확정된 국민연금 5%와 장기요양보험 인상만 반영한 예상입니다. 고용보험과 소득세는 2026년 기준 그대로 계산합니다.</p>
+    </fieldset>
     <fieldset><legend>입력 기준</legend>
       <div class="seg">
         <label><input type="radio" name="mode" value="year" checked><span>연봉</span></label>
@@ -73,6 +80,7 @@
   </section>
   <section class="card prose">
     <h2>어떻게 계산하나요</h2>
+    <p>2027년(예상)을 고르면 국민연금 5%, 장기요양보험 13.90%로 바꿔 계산합니다. 아래 설명은 2026년 기준입니다.</p>
     <p>4대보험은 2026년 근로자 부담 요율(국민연금 4.75%, 건강보험 3.595%, 장기요양보험은 건강보험료의 약 13.14%, 고용보험 0.9%)을 적용합니다. 국민연금은 월 659만원까지만 보험료를 매깁니다.</p>
     <p>소득세는 회사가 매달 떼는 기준인 근로소득 간이세액표(2026년 3월 시행분)의 계산 방식을 그대로 따릅니다. 지방소득세는 소득세의 10%입니다.</p>
   </section>
@@ -82,7 +90,7 @@
     <div><h3>부양가족 수는 어떻게 세나요?</h3><p>본인을 포함해 연말정산에서 기본공제를 받는 가족 수입니다. 혼자라면 1명, 소득이 없는 배우자가 있으면 2명입니다.</p></div>
     <div><h3>여기서 뗀 세금이 최종 세금인가요?</h3><p>아닙니다. 매달 떼는 세금은 어림한 금액이고, 다음 해 연말정산에서 실제 세금과 비교해 돌려받거나 더 냅니다.</p></div>
   </section>
-<nav class="related" aria-label="다른 페이지"><a href="../year-end-tax/">연말정산 환급액 계산기</a><a href="../freelancer-tax/">프리랜서 3.3% 세금 계산기</a><a href="../parental-leave/">육아휴직 급여 계산기</a><a href="../salary-table/">2026 연봉 실수령액 표</a><a href="../insurance-rates/">2026 4대보험 요율표</a></nav>
+<nav class="related" aria-label="다른 페이지"><a href="../year-end-tax/">연말정산 환급액 계산기</a><a href="../freelancer-tax/">프리랜서 3.3% 세금 계산기</a><a href="../parental-leave/">육아휴직 급여 계산기</a><a href="../salary-table/">2026 연봉 실수령액 표</a><a href="../salary-2027/">2027 연봉 실수령액 예상</a><a href="../insurance-rates/">2026 4대보험 요율표</a></nav>
 <footer class="foot">
   <p>계산 결과는 참고용 예상 금액이며 실제 금액과 다를 수 있습니다.</p>
   <p>기준: 2026년 11월 현재 시행 중인 요율과 세법 · <a href="../">생활 계산기 전체 보기</a></p>
@@ -96,11 +104,13 @@ function render() {
   var annual = mode === "year" ? pay : pay * 12;
   var fam = UI.step("family"), kids = Math.min(UI.step("kids"), Math.max(0, fam - 1));
   document.getElementById("kids").textContent = kids;
-  var r = TAX.netPay({ annual: annual, nontaxMonthly: UI.num("nontax") * 10000, family: fam, kids: kids });
+  var y27 = UI.radio("yr") === "2027", R = y27 ? TAX.RATES_2027 : TAX.RATES;
+  document.getElementById("yrnote").hidden = !y27;
+  var r = TAX.netPay({ annual: annual, nontaxMonthly: UI.num("nontax") * 10000, family: fam, kids: kids, rates: R });
   var w = TAX.won;
   document.getElementById("net").textContent = w(Math.max(0, r.net));
   document.getElementById("netsub").textContent = annual > 0 ? "1년 합계 약 " + w(Math.max(0, r.net) * 12) + " · 세전 월 " + w(r.gross) : "세전 금액을 입력하세요.";
-  var items = [["국민연금", "4.75%", r.ins.pension], ["건강보험", "3.595%", r.ins.health], ["장기요양보험", "건강보험료의 13.14%", r.ins.care],
+  var items = [["국민연금", (R.pension * 100) + "%", r.ins.pension], ["건강보험", "3.595%", r.ins.health], ["장기요양보험", "건강보험료의 " + (R.careOfHealth * 100).toFixed(2) + "%", r.ins.care],
     ["고용보험", "0.9%", r.ins.employ], ["소득세", "간이세액표", r.incomeTax], ["지방소득세", "소득세의 10%", r.localTax]];
   var html = items.map(function (i) { return '<li><span class="k">' + i[0] + ' <small>' + i[1] + '</small></span><span class="v">' + w(i[2]) + '</span></li>'; }).join("");
   html += '<li class="sum"><span class="k">공제 합계</span><span class="v">' + w(r.deduct) + '</span></li>';

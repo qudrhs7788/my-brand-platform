@@ -5,7 +5,7 @@
 })(typeof self !== "undefined" ? self : this, function () {
   var MAN = 10000;
 
-  var RATES = {
+  var RATES_2026 = {
     pension: 0.0475,          // 국민연금 근로자 부담
     pensionMin: 410000,       // 기준소득월액 하한 (2026.7~2027.6)
     pensionMax: 6590000,      // 기준소득월액 상한 (2026.7~2027.6)
@@ -13,11 +13,18 @@
     careOfHealth: 0.9448 / 7.19, // 장기요양: 건강보험료의 약 13.14%
     employ: 0.009             // 고용보험 근로자 부담
   };
+  /* 2027년 예상: 국민연금 5%(법 확정), 건강보험 동결, 장기요양 0.9994%(건강보험료의 약 13.90%),
+     고용보험은 인상안(1.0%)이 확정 전이라 현행 0.9% 유지로 계산 */
+  var RATES_2027 = {
+    pension: 0.05, pensionMin: 410000, pensionMax: 6590000,
+    health: 0.03595, careOfHealth: 0.9994 / 7.19, employ: 0.009
+  };
 
   function floor10(x) { return Math.floor((x + 1e-6) / 10) * 10; }
 
   /* 월 과세 급여 기준 4대보험 근로자 부담액 */
-  function insurance(monthly) {
+  function insurance(monthly, rates) {
+    var RATES = rates || RATES_2026;
     var base = Math.floor(monthly / 1000) * 1000;
     var pBase = Math.min(Math.max(base, RATES.pensionMin), RATES.pensionMax);
     var pension = monthly > 0 ? floor10(pBase * RATES.pension) : 0;
@@ -123,7 +130,7 @@
     var gross = Math.round(o.annual / 12);
     var nontax = Math.min(o.nontaxMonthly || 0, gross);
     var taxable = gross - nontax;
-    var ins = insurance(taxable);
+    var ins = insurance(taxable, o.rates);
     var income = simpleTax(taxable, o.family || 1, o.kids || 0);
     var local = floor10(income * 0.1);
     var deduct = ins.total + income + local;
@@ -202,7 +209,7 @@
 
   function won(n) { return Math.round(n).toLocaleString("ko-KR") + "원"; }
 
-  return { RATES: RATES, insurance: insurance, earnedDeduction: earnedDeduction,
+  return { RATES: RATES_2026, RATES_2027: RATES_2027, insurance: insurance, earnedDeduction: earnedDeduction,
            progressive: progressive, tableTax: tableTax, simpleTax: simpleTax, netPay: netPay,
            earnedCredit: earnedCredit, cardDeduction: cardDeduction, yearEnd: yearEnd,
            won: won, floor10: floor10 };

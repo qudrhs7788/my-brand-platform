@@ -78,6 +78,19 @@ function salaryRows() {
     return `<tr><td>${name}원</td><td class="em">${won(r.net)}</td><td>${won(r.deduct)}</td><td>${won(r.ins.pension)}</td><td>${won(r.ins.health)}</td><td>${won(r.ins.care)}</td><td>${won(r.ins.employ)}</td><td>${won(r.incomeTax)}</td><td>${won(r.localTax)}</td></tr>`;
   }).join("\n          ");
 }
+function rows2027() {
+  const list = [];
+  for (let a = 2400; a <= 10000; a += 200) list.push(a);
+  for (let a = 11000; a <= 20000; a += 1000) list.push(a);
+  return list.map((a) => {
+    const o = { annual: a * 10000, nontaxMonthly: 200000, family: 1, kids: 0 };
+    const r26 = TAX.netPay(o), r27 = TAX.netPay({ ...o, rates: TAX.RATES_2027 });
+    const d = r27.net - r26.net;
+    const name = a >= 10000 ? (a % 10000 === 0 ? a / 10000 + "억" : Math.floor(a / 10000) + "억 " + won(a % 10000) + "만") : won(a) + "만";
+    return `<tr><td>${name}원</td><td>${won(r26.net)}</td><td class="em">${won(r27.net)}</td><td>${won(d)}</td><td>${won(d * 12)}</td><td>${won(r27.ins.pension)}</td><td>${won(r27.ins.health)}</td><td>${won(r27.ins.care)}</td></tr>`;
+  }).join("\n          ");
+}
+const diff27 = (a) => { const o = { annual: a * 10000, nontaxMonthly: 200000, family: 1, kids: 0 }; return TAX.netPay(o).net - TAX.netPay({ ...o, rates: TAX.RATES_2027 }).net; };
 const ex = (m) => TAX.insurance(m);
 const insRow = (m) => { const i = ex(m * 10000); return `<tr><td>${won(m)}만원</td><td>${won(i.pension)}</td><td>${won(i.health)}</td><td>${won(i.care)}</td><td>${won(i.employ)}</td><td class="em">${won(i.total)}</td></tr>`; };
 
@@ -113,6 +126,13 @@ const pages = [
     <p class="lede">4대보험과 소득세를 빼고 매달 통장에 들어오는 금액을 계산합니다.</p>
   </section>
   <section class="card" aria-label="입력">
+    <fieldset><legend>기준 연도</legend>
+      <div class="seg">
+        <label><input type="radio" name="yr" value="2026" checked><span>2026년</span></label>
+        <label><input type="radio" name="yr" value="2027"><span>2027년 (예상)</span></label>
+      </div>
+      <p class="note" id="yrnote" hidden>2027년은 확정된 국민연금 5%와 장기요양보험 인상만 반영한 예상입니다. 고용보험과 소득세는 2026년 기준 그대로 계산합니다.</p>
+    </fieldset>
     <fieldset><legend>입력 기준</legend>
       <div class="seg">
         <label><input type="radio" name="mode" value="year" checked><span>연봉</span></label>
@@ -137,6 +157,7 @@ const pages = [
   </section>
   <section class="card prose">
     <h2>어떻게 계산하나요</h2>
+    <p>2027년(예상)을 고르면 국민연금 5%, 장기요양보험 13.90%로 바꿔 계산합니다. 아래 설명은 2026년 기준입니다.</p>
     <p>4대보험은 2026년 근로자 부담 요율(국민연금 4.75%, 건강보험 3.595%, 장기요양보험은 건강보험료의 약 13.14%, 고용보험 0.9%)을 적용합니다. 국민연금은 월 659만원까지만 보험료를 매깁니다.</p>
     <p>소득세는 회사가 매달 떼는 기준인 근로소득 간이세액표(2026년 3월 시행분)의 계산 방식을 그대로 따릅니다. 지방소득세는 소득세의 10%입니다.</p>
   </section>
@@ -151,11 +172,13 @@ const pages = [
   var annual = mode === "year" ? pay : pay * 12;
   var fam = UI.step("family"), kids = Math.min(UI.step("kids"), Math.max(0, fam - 1));
   document.getElementById("kids").textContent = kids;
-  var r = TAX.netPay({ annual: annual, nontaxMonthly: UI.num("nontax") * 10000, family: fam, kids: kids });
+  var y27 = UI.radio("yr") === "2027", R = y27 ? TAX.RATES_2027 : TAX.RATES;
+  document.getElementById("yrnote").hidden = !y27;
+  var r = TAX.netPay({ annual: annual, nontaxMonthly: UI.num("nontax") * 10000, family: fam, kids: kids, rates: R });
   var w = TAX.won;
   document.getElementById("net").textContent = w(Math.max(0, r.net));
   document.getElementById("netsub").textContent = annual > 0 ? "1년 합계 약 " + w(Math.max(0, r.net) * 12) + " · 세전 월 " + w(r.gross) : "세전 금액을 입력하세요.";
-  var items = [["국민연금", "4.75%", r.ins.pension], ["건강보험", "3.595%", r.ins.health], ["장기요양보험", "건강보험료의 13.14%", r.ins.care],
+  var items = [["국민연금", (R.pension * 100) + "%", r.ins.pension], ["건강보험", "3.595%", r.ins.health], ["장기요양보험", "건강보험료의 " + (R.careOfHealth * 100).toFixed(2) + "%", r.ins.care],
     ["고용보험", "0.9%", r.ins.employ], ["소득세", "간이세액표", r.incomeTax], ["지방소득세", "소득세의 10%", r.localTax]];
   var html = items.map(function (i) { return '<li><span class="k">' + i[0] + ' <small>' + i[1] + '</small></span><span class="v">' + w(i[2]) + '</span></li>'; }).join("");
   html += '<li class="sum"><span class="k">공제 합계</span><span class="v">' + w(r.deduct) + '</span></li>';
@@ -447,6 +470,53 @@ UI.init(render);`
     <h2>자주 묻는 질문</h2>
     <div><h3>2025년보다 실수령액이 줄었나요?</h3><p>같은 연봉이라면 조금 줄었습니다. 2026년부터 국민연금 근로자 부담이 4.5%에서 4.75%로, 건강보험이 3.545%에서 3.595%로 올랐기 때문입니다.</p></div>
     <div><h3>상여금이나 성과급이 있으면요?</h3><p>이 표는 연봉을 12로 나눠 매달 같은 금액을 받는다고 가정합니다. 상여금을 따로 받으면 달마다 실수령액이 달라지지만 1년 합계는 비슷합니다.</p></div>
+  </section>`
+  },
+
+  /* ---------- 2027 예상 ---------- */
+  {
+    slug: "salary-2027", kind: "info", short: "2027 연봉 실수령액 예상",
+    title: "2027년 연봉 실수령액 표 (예상)",
+    tile: "국민연금 5% 인상 등을 반영해 2027년 월급이 2026년보다 얼마나 줄어드는지 연봉별로 비교했습니다.",
+    desc: "2027년 연봉 실수령액 예상 표. 국민연금 10% 인상과 장기요양보험 인상을 반영해 2026년 대비 월 실수령액이 얼마나 줄어드는지 연봉별로 비교합니다.",
+    foot: "부양가족 1명(본인), 비과세 식대 월 20만원 가정. 2027년 금액은 예상이며, 고용보험 요율·국민연금 상한액(2027년 7월~)·간이세액표가 확정되면 달라질 수 있습니다.",
+    body: () => `<section class="hero">
+    <span class="eyebrow">예상 · ${UPDATED} 기준</span>
+    <h1>2027년 연봉 실수령액 표</h1>
+    <p class="lede">같은 연봉이라면 2027년에는 월급이 조금 줄어듭니다. 지금까지 정해진 요율로 미리 계산했습니다.</p>
+  </section>
+  <section class="result">
+    <span class="label">연봉 5,000만원이면 2026년보다</span>
+    <span class="big">월 ${won(diff27(5000))}원 감소</span>
+    <span class="sub">1년에 약 ${won(diff27(5000) * 12)}원 · 국민연금과 장기요양보험 인상분</span>
+  </section>
+  <section class="card">
+    <h2>2027년에 바뀌는 것</h2>
+    <ul class="rows">
+      <li><span class="k">국민연금 (근로자) <small>법으로 확정</small></span><span class="v">4.75% → 5%</span></li>
+      <li><span class="k">건강보험 (근로자) <small>동결 결정</small></span><span class="v">3.595% 그대로</span></li>
+      <li><span class="k">장기요양보험 <small>건강보험료 대비</small></span><span class="v">13.14% → 13.90%</span></li>
+      <li><span class="k">고용보험 (근로자) <small>인상안 확정 전</small></span><span class="v">0.9%로 계산</span></li>
+      <li><span class="k">소득세 <small>간이세액표 개정 전</small></span><span class="v">2026년 기준</span></li>
+    </ul>
+    <p class="note">고용보험 실업급여 요율을 근로자 1.0%로 올리는 안이 추진 중입니다. 확정되면 월급 300만원 기준으로 월 3,000원이 더 빠집니다.</p>
+  </section>
+  <section class="card">
+    <h2>연봉별 월 실수령액 비교</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>연봉</th><th>2026년</th><th>2027년 예상</th><th>월 차이</th><th>연 차이</th><th>국민연금</th><th>건강보험</th><th>장기요양</th></tr></thead>
+      <tbody>
+          ${rows2027()}
+      </tbody>
+    </table></div>
+    <p class="hint">단위: 원. 국민연금·건강보험·장기요양은 2027년 예상 월 보험료입니다. 표가 넓으면 옆으로 밀어서 보세요.</p>
+    <p>내 조건으로 보려면 <a href="../salary/">연봉 실수령액 계산기</a>에서 기준 연도를 2027년으로 바꿔 보세요.</p>
+  </section>
+  <section class="card faq">
+    <h2>자주 묻는 질문</h2>
+    <div><h3>국민연금은 언제까지 오르나요?</h3><p>2026년 9.5%에서 시작해 해마다 0.5%포인트씩 올라 2033년에 13%가 됩니다. 직장인은 절반을 내므로 본인 부담은 해마다 0.25%포인트씩 늘어납니다.</p></div>
+    <div><h3>연봉이 높으면 덜 줄어드는 이유는?</h3><p>국민연금은 월 659만원까지만 보험료를 매깁니다. 그 이상 받는 사람은 국민연금 인상분이 월 16,480원으로 같습니다.</p></div>
+    <div><h3>이 표는 언제 확정되나요?</h3><p>고용보험 요율과 세법 개정은 보통 12월에, 간이세액표는 다음 해 2월쯤 확정됩니다. 확정되는 대로 표를 고칩니다.</p></div>
   </section>`
   },
 
