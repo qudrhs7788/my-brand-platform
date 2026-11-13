@@ -3,9 +3,10 @@
 const fs = require("fs");
 const path = require("path");
 const TAX = require("../assets/tax.js");
+const SUP = require("./suppliers.js");
 
 const ROOT = path.join(__dirname, "..");
-const SITE = "생활 계산기";
+const SITE = "장사 도우미";
 const BASE_URL = "https://qudrhs7788.github.io/my-brand-platform/";
 const UPDATED = "2026년 11월";
 const won = (n) => Math.round(n).toLocaleString("ko-KR");
@@ -36,7 +37,7 @@ function layout(p) {
 <body>
 <header class="top"><div class="top-in">
   <a class="brand" href="${up || "./"}"><i></i>${SITE}</a>
-  <nav><a href="${up}salary/">실수령액</a><a href="${up}year-end-tax/">연말정산</a><a href="${up}salary-table/">연봉표</a></nav>
+  <nav><a href="${up}suppliers/">구매처</a><a href="${up}menu-cost/">원가</a><a href="${up}salary/">급여</a></nav>
 </div></header>
 <main class="wrap">
 ${p.body}
@@ -46,7 +47,7 @@ ${related}
   <p>기준: ${UPDATED} 현재 시행 중인 요율과 세법 · <a href="${up || "./"}">${SITE} 전체 보기</a></p>
 </footer>
 </main>
-${p.script ? `<script src="${up}assets/tax.js"></script>\n<script src="${up}assets/ui.js"></script>\n<script>\n${p.script}\n</script>` : ""}
+${p.script ? `<script src="${up}assets/tax.js"></script>\n<script src="${up}assets/ui.js"></script>\n<script>\n${p.script}\n</script>` : ""}${p.rawScript ? `<script>\n${p.rawScript}\n</script>` : ""}
 </body>
 </html>
 `;
@@ -97,21 +98,210 @@ const insRow = (m) => { const i = ex(m * 10000); return `<tr><td>${won(m)}만원
 const pages = [
   /* ---------- 첫 화면 ---------- */
   {
-    slug: "", title: SITE, short: "홈",
-    desc: "연봉 실수령액, 연말정산 환급액, 3.3% 세금, 육아휴직 급여를 바로 계산하고 2026년 연봉 실수령액 표와 4대보험 요율을 확인하세요.",
-    body: () => `<section class="hero">
-    <span class="eyebrow">2026년 기준</span>
-    <h1>월급과 세금,<br>바로 계산해 보세요</h1>
-    <p class="lede">가입도 설치도 필요 없습니다. 숫자만 넣으면 결과가 바로 나옵니다.</p>
+    slug: "", title: SITE + " | 식자재 구매처 비교와 가게 운영 계산기", short: "홈",
+    desc: "식자재 구매처 비교, 메뉴 원가·마진 계산, 직원 급여와 4대보험 계산까지. 가게 운영에 필요한 숫자를 한곳에서 확인하세요.",
+    body: () => {
+      const tile = (slug, tag) => { const p = pages.find((x) => x.slug === slug); return `
+    <li><a class="tile" href="${p.slug}/"><span class="tag">${tag}</span><strong>${p.short}</strong><span class="d">${p.tile}</span></a></li>`; };
+      return `<section class="hero">
+    <span class="eyebrow">식당·카페 사장님을 위한</span>
+    <h1>식자재부터 인건비까지,<br>가게 숫자를 한곳에서</h1>
+    <p class="lede">어디서 살지 비교하고, 메뉴 원가와 직원 급여를 바로 계산하세요. 가입 없이 무료입니다.</p>
   </section>
-  <h2 class="section-title">계산기</h2>
-  <ul class="tiles">${pages.filter((p) => p.kind === "calc").map((p) => `
-    <li><a class="tile" href="${p.slug}/"><span class="tag">계산기</span><strong>${p.short}</strong><span class="d">${p.tile}</span></a></li>`).join("")}
+  <h2 class="section-title">식자재</h2>
+  <ul class="tiles">${tile("suppliers", "비교")}${tile("menu-cost", "계산기")}
   </ul>
-  <h2 class="section-title">한눈에 보는 정보</h2>
-  <ul class="tiles">${pages.filter((p) => p.kind === "info").map((p) => `
-    <li><a class="tile" href="${p.slug}/"><span class="tag">정보</span><strong>${p.short}</strong><span class="d">${p.tile}</span></a></li>`).join("")}
-  </ul>`
+  <h2 class="section-title">직원 급여와 4대보험</h2>
+  <ul class="tiles">${tile("salary", "계산기")}${tile("insurance-rates", "정보")}${tile("freelancer-tax", "계산기")}${tile("salary-table", "정보")}${tile("salary-2027", "정보")}
+  </ul>
+  <h2 class="section-title">그 밖의 계산기</h2>
+  <ul class="tiles">${tile("year-end-tax", "계산기")}${tile("parental-leave", "계산기")}
+  </ul>`;
+    }
+  },
+
+  /* ---------- 식자재 구매처 비교 ---------- */
+  {
+    slug: "suppliers", kind: "info", short: "식자재 구매처 비교",
+    title: "식자재 구매처 비교: 식봄·오더플러스·배민상회 등 7곳",
+    tile: "식봄, 오더플러스, 배민상회 등 온라인 식자재 구매처 7곳의 배송 조건과 특징을 나란히 정리했습니다.",
+    desc: "식당 식자재 어디서 살까? 식봄, 오더플러스, 배민상회, 푸드팡, 식자재왕몰, 베스트온, CJ프레시웨이의 배송 조건, 주문 마감, 특징을 공개 자료 기준으로 비교합니다.",
+    foot: "각 업체의 공개 자료(공식 소개, 앱 소개, 보도)를 정리한 것으로, 직접 이용한 후기가 아닙니다. 어느 업체로부터도 대가를 받지 않았습니다. 조건은 수시로 바뀌니 주문 전에 각 업체에서 확인하세요.",
+    body: () => `<section class="hero">
+    <span class="eyebrow">${SUP.checked} 조사</span>
+    <h1>식자재 구매처 비교</h1>
+    <p class="lede">온라인으로 식자재를 살 수 있는 곳 ${SUP.list.length}곳을 공개 자료 기준으로 정리했습니다. 가격은 날마다 달라 싣지 않았고, 배송 조건과 성격을 비교합니다.</p>
+  </section>
+  <section class="card">
+    <h2>상황별로 먼저 볼 곳</h2>
+    <ul class="rows">${SUP.list.map((x) => `
+      <li><span class="k">${x.fit}</span><span class="v"><a href="#${x.id}">${x.name.split(" (")[0]}</a></span></li>`).join("")}
+    </ul>
+    <p class="hint">각 업체가 스스로 내세우는 특징을 기준으로 나눈 것입니다.</p>
+  </section>
+  <section class="card">
+    <h2>한눈에 비교</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>구매처</th><th>형태</th><th>앱 평점</th></tr></thead>
+      <tbody>${SUP.list.map((x) => `
+        <tr><td><a href="#${x.id}">${x.name.split(" (")[0]}</a></td><td>${x.type}</td><td>${x.rating ? (x.rating[2] ? `${x.rating[1]} (${x.rating[2]}개)` : "평가 적음") : "확인 못함"}</td></tr>`).join("")}
+      </tbody>
+    </table></div>
+    <p class="hint">앱 평점은 App Store 기준이며 평가 수가 수십 개라 참고만 하세요.</p>
+  </section>
+${SUP.list.map((x) => `  <section class="card" id="${x.id}">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <span class="eyebrow">${x.type}</span>
+      <h2>${x.name}</h2>
+      <p class="hint">운영: ${x.operator}</p>
+    </div>
+    <p>${x.oneLine}</p>
+    <ul class="rows wide">${x.facts.map((f) => `
+      <li><span class="k">${f[0]}</span><span class="v">${f[1]}</span></li>`).join("")}${x.rating && x.rating[2] ? `
+      <li><span class="k">앱 평점</span><span class="v">${x.rating[0]} ${x.rating[1]}점 (평가 ${x.rating[2]}개)</span></li>` : ""}
+    </ul>
+    <a class="btn" href="${x.link[1]}" rel="noopener nofollow">${x.link[0]} 열기</a>
+    <p class="hint">출처: ${x.src.map((l) => `<a href="${l[1]}" rel="noopener nofollow">${l[0]}</a>`).join(" · ")}</p>
+  </section>`).join("\n")}
+  <section class="card prose">
+    <h2>고를 때 확인할 것</h2>
+    <ul>
+      <li>우리 가게 주소로 배송되는지. 대부분 지역마다 가능한 판매자와 상품이 다릅니다.</li>
+      <li>무료배송 기준 금액과 주문 마감 시간. 하루 사용량이 적으면 배송비가 단가 차이보다 클 수 있습니다.</li>
+      <li>가게 안까지 넣어 주는지, 문 앞에 두는지. 새벽 배송은 출입 방법을 미리 알려야 합니다.</li>
+      <li>품질 문제가 생겼을 때 교환·환불 절차와 고객센터 운영 시간.</li>
+      <li>첫 구매 쿠폰은 한 번뿐입니다. 평소 가격으로 비교하세요.</li>
+    </ul>
+    <p>단가를 정했다면 <a href="../menu-cost/">메뉴 원가·마진 계산기</a>로 메뉴별 원가율을 확인해 보세요.</p>
+  </section>
+  <section class="card faq">
+    <h2>자주 묻는 질문</h2>
+    <div><h3>사업자가 아니어도 살 수 있나요?</h3><p>대부분 사업자 회원을 대상으로 하고, 사업장 주소로만 배송하는 곳이 많습니다. 가입 조건은 업체마다 다르니 가입 화면에서 확인하세요.</p></div>
+    <div><h3>오픈마켓과 직영몰은 뭐가 다른가요?</h3><p>오픈마켓은 여러 유통사가 입점해 있어 같은 상품의 가격을 비교할 수 있지만, 배송 조건이 판매자마다 다릅니다. 직영몰은 한 회사가 팔고 배송해 조건이 일정합니다.</p></div>
+    <div><h3>왜 가격은 비교하지 않나요?</h3><p>식자재 가격은 날마다, 지역마다, 쿠폰에 따라 달라서 고정된 표로는 정확하지 않습니다. 실제 가격은 각 업체 앱에서 가게 주소를 넣고 확인하는 것이 맞습니다.</p></div>
+  </section>`
+  },
+
+  /* ---------- 메뉴 원가 ---------- */
+  {
+    slug: "menu-cost", kind: "calc", short: "메뉴 원가·마진 계산기",
+    title: "메뉴 원가·마진 계산기",
+    tile: "재료 단가와 1인분 사용량을 넣으면 메뉴 원가율과 마진, 목표 원가율에 맞는 판매가를 계산합니다.",
+    desc: "식당·카페 메뉴 원가 계산기. 재료 구매가와 1인분 사용량으로 원가율, 마진, 목표 원가율에 맞는 적정 판매가를 계산합니다.",
+    foot: "재료비만 계산합니다. 인건비, 임대료, 수수료, 부가세는 포함하지 않았습니다. 입력한 내용은 이 기기에만 저장됩니다.",
+    body: () => `<section class="hero">
+    <span class="eyebrow">식당·카페 사장님용</span>
+    <h1>메뉴 원가·마진 계산기</h1>
+    <p class="lede">재료를 얼마에 사서 1인분에 얼마나 쓰는지 넣으면 원가율이 바로 나옵니다.</p>
+  </section>
+  <section class="card" aria-label="메뉴">
+    <div class="grid2">
+      <div class="field"><label for="mname">메뉴 이름</label>
+        <div class="inputwrap"><input id="mname" type="text" value="김치찌개" style="text-align:left;font-size:17px" autocomplete="off"></div></div>
+      <div class="field"><label for="price">판매가</label>
+        <div class="inputwrap"><input id="price" class="mny" type="text" inputmode="numeric" value="9,000" autocomplete="off"><span class="unit">원</span></div></div>
+    </div>
+  </section>
+  <section class="card" aria-label="재료">
+    <h2>재료</h2>
+    <p class="hint">구매 단위와 사용량은 g, ml, 개 중 같은 단위의 숫자로 넣으세요. 예: 10kg 한 박스는 10000, 1인분 150g은 150.</p>
+    <div id="ings" class="ings"></div>
+    <button type="button" class="btn ghost" id="add">재료 추가</button>
+  </section>
+  <section class="result" id="box" aria-live="polite">
+    <span class="label">원가율</span>
+    <span class="big" id="rate">0%</span>
+    <span class="sub" id="sub"></span>
+  </section>
+  <section class="card">
+    <h2>계산 내역</h2>
+    <ul class="rows" id="rows"></ul>
+  </section>
+  <section class="card">
+    <h2>목표 원가율에 맞는 판매가</h2>
+    <ul class="rows" id="targets"></ul>
+    <p class="hint">지금 재료비를 그대로 두고 원가율을 맞추려면 받아야 하는 가격입니다.</p>
+  </section>
+  <section class="card prose">
+    <h2>원가율은 어떻게 보나요</h2>
+    <p>원가율은 판매가에서 재료비가 차지하는 비율입니다. 외식업에서는 흔히 30~35% 안팎을 기준으로 삼지만, 업종과 가격대에 따라 다릅니다. 재료비 비중이 높은 고깃집이나 횟집은 40%를 넘기도 하고, 카페 음료는 더 낮습니다.</p>
+    <p>원가율이 높게 나오면 판매가를 올리거나, 1인분 사용량을 조정하거나, 더 싼 구매처를 찾는 세 가지 방법이 있습니다. 구매처는 <a href="../suppliers/">식자재 구매처 비교</a>에서 볼 수 있습니다.</p>
+  </section>
+  <section class="card faq">
+    <h2>자주 묻는 질문</h2>
+    <div><h3>손질하면 버리는 부분은 어떻게 넣나요?</h3><p>실제로 쓰는 양 기준으로 넣으세요. 양파 15kg을 사서 다듬고 13kg을 쓴다면 구매 단위에 13000을 넣으면 됩니다.</p></div>
+    <div><h3>양념이나 육수처럼 여러 재료가 섞인 건요?</h3><p>한 번 만들 때 든 재료비 합계를 구매 가격에, 만들어진 양을 구매 단위에 넣으면 됩니다.</p></div>
+    <div><h3>배달 수수료와 포장비는요?</h3><p>이 계산기는 재료비만 봅니다. 배달 메뉴는 포장 용기를 재료로 추가하고, 수수료는 남는 금액에서 따로 빼서 보세요.</p></div>
+  </section>`,
+    rawScript: `(function () {
+  var KEY = "menu-cost-v1";
+  var DEF = [["돼지고기 앞다리", 89000, 10000, 80], ["김치", 22000, 10000, 150], ["두부", 1500, 300, 75], ["대파·양념", 5000, 1000, 30], ["공깃밥", 55000, 20000, 110]];
+  var box = document.getElementById("ings");
+  function num(s) { return Number(String(s).replace(/[^0-9.]/g, "")) || 0; }
+  function comma(n) { return n === "" ? "" : Number(n).toLocaleString("ko-KR"); }
+  function won(n) { return Math.round(n).toLocaleString("ko-KR") + "원"; }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function rowHtml(r, i) {
+    return '<div class="ing" data-i="' + i + '">' +
+      '<div class="ing-head"><input class="nm" type="text" aria-label="재료 이름" placeholder="재료 이름" value="' + esc(r[0]) + '"><button type="button" class="del" aria-label="이 재료 삭제">삭제</button></div>' +
+      '<div class="ing-grid">' +
+      '<label>구매 가격<span class="inputwrap sm"><input class="mny pc" type="text" inputmode="numeric" value="' + comma(r[1]) + '"><span class="unit">원</span></span></label>' +
+      '<label>구매 단위<span class="inputwrap sm"><input class="mny pu" type="text" inputmode="decimal" value="' + comma(r[2]) + '"></span></label>' +
+      '<label>1인분 사용량<span class="inputwrap sm"><input class="mny us" type="text" inputmode="decimal" value="' + comma(r[3]) + '"></span></label>' +
+      '</div><p class="ing-cost"></p></div>';
+  }
+  function read() {
+    return Array.prototype.map.call(box.querySelectorAll(".ing"), function (el) {
+      return [el.querySelector(".nm").value, num(el.querySelector(".pc").value), num(el.querySelector(".pu").value), num(el.querySelector(".us").value)];
+    });
+  }
+  function draw(list) { box.innerHTML = list.map(rowHtml).join(""); }
+  function save(list) {
+    try { localStorage.setItem(KEY, JSON.stringify({ n: document.getElementById("mname").value, p: num(document.getElementById("price").value), l: list })); } catch (e) {}
+  }
+  function render() {
+    var list = read(), price = num(document.getElementById("price").value), total = 0;
+    Array.prototype.forEach.call(box.querySelectorAll(".ing"), function (el, i) {
+      var r = list[i], c = r[2] > 0 ? r[1] / r[2] * r[3] : 0;
+      total += c;
+      el.querySelector(".ing-cost").textContent = r[2] > 0 ? "1인분 " + won(c) : "구매 단위를 입력하세요";
+    });
+    var rate = price > 0 ? total / price * 100 : 0;
+    var b = document.getElementById("box");
+    b.className = "result" + (price > 0 && rate > 40 ? " minus" : "");
+    document.getElementById("rate").textContent = price > 0 ? rate.toFixed(1) + "%" : "판매가를 입력하세요";
+    document.getElementById("sub").textContent = price > 0 ? "한 그릇 팔면 재료비를 빼고 " + won(price - total) + " 남습니다" : "";
+    document.getElementById("rows").innerHTML =
+      '<li><span class="k">판매가</span><span class="v">' + won(price) + '</span></li>' +
+      '<li><span class="k">1인분 재료비</span><span class="v">' + won(total) + '</span></li>' +
+      '<li class="sum"><span class="k">재료비를 뺀 금액</span><span class="v">' + won(price - total) + '</span></li>' +
+      '<li><span class="k">하루 50그릇 팔 때 <small>재료비를 뺀 금액</small></span><span class="v">' + won((price - total) * 50) + '</span></li>';
+    document.getElementById("targets").innerHTML = [30, 35, 40].map(function (t) {
+      var need = total / (t / 100), up = Math.ceil(need / 100) * 100;
+      return '<li><span class="k">원가율 ' + t + '%</span><span class="v">' + won(up) + '</span></li>';
+    }).join("");
+    save(list);
+  }
+  var start = DEF;
+  try {
+    var s = JSON.parse(localStorage.getItem(KEY) || "null");
+    if (s && s.l && s.l.length) { start = s.l; document.getElementById("mname").value = s.n || ""; document.getElementById("price").value = comma(s.p || 0); }
+  } catch (e) {}
+  draw(start);
+  document.addEventListener("input", function (e) {
+    var t = e.target;
+    if (t.classList && t.classList.contains("mny")) {
+      var raw = String(t.value).replace(/[^0-9.]/g, "");
+      if (raw !== "" && raw.slice(-1) !== ".") t.value = comma(raw);
+    }
+    render();
+  });
+  box.addEventListener("click", function (e) {
+    if (e.target.classList.contains("del")) { var l = read(); l.splice(Number(e.target.closest(".ing").getAttribute("data-i")), 1); draw(l); render(); }
+  });
+  document.getElementById("add").addEventListener("click", function () { var l = read(); l.push(["", 0, 0, 0]); draw(l); render(); var n = box.querySelectorAll(".nm"); n[n.length - 1].focus(); });
+  render();
+})();`
   },
 
   /* ---------- 연봉 실수령액 계산기 ---------- */

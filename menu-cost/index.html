@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>메뉴 원가·마진 계산기 | 장사 도우미</title>
+<meta name="description" content="식당·카페 메뉴 원가 계산기. 재료 구매가와 1인분 사용량으로 원가율, 마진, 목표 원가율에 맞는 적정 판매가를 계산합니다.">
+<link rel="canonical" href="https://qudrhs7788.github.io/my-brand-platform/menu-cost/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="메뉴 원가·마진 계산기">
+<meta property="og:description" content="식당·카페 메뉴 원가 계산기. 재료 구매가와 1인분 사용량으로 원가율, 마진, 목표 원가율에 맞는 적정 판매가를 계산합니다.">
+<meta property="og:url" content="https://qudrhs7788.github.io/my-brand-platform/menu-cost/">
+<meta property="og:site_name" content="장사 도우미">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <a class="brand" href="../"><i></i>장사 도우미</a>
+  <nav><a href="../suppliers/">구매처</a><a href="../menu-cost/">원가</a><a href="../salary/">급여</a></nav>
+</div></header>
+<main class="wrap">
+<section class="hero">
+    <span class="eyebrow">식당·카페 사장님용</span>
+    <h1>메뉴 원가·마진 계산기</h1>
+    <p class="lede">재료를 얼마에 사서 1인분에 얼마나 쓰는지 넣으면 원가율이 바로 나옵니다.</p>
+  </section>
+  <section class="card" aria-label="메뉴">
+    <div class="grid2">
+      <div class="field"><label for="mname">메뉴 이름</label>
+        <div class="inputwrap"><input id="mname" type="text" value="김치찌개" style="text-align:left;font-size:17px" autocomplete="off"></div></div>
+      <div class="field"><label for="price">판매가</label>
+        <div class="inputwrap"><input id="price" class="mny" type="text" inputmode="numeric" value="9,000" autocomplete="off"><span class="unit">원</span></div></div>
+    </div>
+  </section>
+  <section class="card" aria-label="재료">
+    <h2>재료</h2>
+    <p class="hint">구매 단위와 사용량은 g, ml, 개 중 같은 단위의 숫자로 넣으세요. 예: 10kg 한 박스는 10000, 1인분 150g은 150.</p>
+    <div id="ings" class="ings"></div>
+    <button type="button" class="btn ghost" id="add">재료 추가</button>
+  </section>
+  <section class="result" id="box" aria-live="polite">
+    <span class="label">원가율</span>
+    <span class="big" id="rate">0%</span>
+    <span class="sub" id="sub"></span>
+  </section>
+  <section class="card">
+    <h2>계산 내역</h2>
+    <ul class="rows" id="rows"></ul>
+  </section>
+  <section class="card">
+    <h2>목표 원가율에 맞는 판매가</h2>
+    <ul class="rows" id="targets"></ul>
+    <p class="hint">지금 재료비를 그대로 두고 원가율을 맞추려면 받아야 하는 가격입니다.</p>
+  </section>
+  <section class="card prose">
+    <h2>원가율은 어떻게 보나요</h2>
+    <p>원가율은 판매가에서 재료비가 차지하는 비율입니다. 외식업에서는 흔히 30~35% 안팎을 기준으로 삼지만, 업종과 가격대에 따라 다릅니다. 재료비 비중이 높은 고깃집이나 횟집은 40%를 넘기도 하고, 카페 음료는 더 낮습니다.</p>
+    <p>원가율이 높게 나오면 판매가를 올리거나, 1인분 사용량을 조정하거나, 더 싼 구매처를 찾는 세 가지 방법이 있습니다. 구매처는 <a href="../suppliers/">식자재 구매처 비교</a>에서 볼 수 있습니다.</p>
+  </section>
+  <section class="card faq">
+    <h2>자주 묻는 질문</h2>
+    <div><h3>손질하면 버리는 부분은 어떻게 넣나요?</h3><p>실제로 쓰는 양 기준으로 넣으세요. 양파 15kg을 사서 다듬고 13kg을 쓴다면 구매 단위에 13000을 넣으면 됩니다.</p></div>
+    <div><h3>양념이나 육수처럼 여러 재료가 섞인 건요?</h3><p>한 번 만들 때 든 재료비 합계를 구매 가격에, 만들어진 양을 구매 단위에 넣으면 됩니다.</p></div>
+    <div><h3>배달 수수료와 포장비는요?</h3><p>이 계산기는 재료비만 봅니다. 배달 메뉴는 포장 용기를 재료로 추가하고, 수수료는 남는 금액에서 따로 빼서 보세요.</p></div>
+  </section>
+<nav class="related" aria-label="다른 페이지"><a href="../suppliers/">식자재 구매처 비교</a><a href="../salary/">연봉 실수령액 계산기</a><a href="../year-end-tax/">연말정산 환급액 계산기</a><a href="../freelancer-tax/">프리랜서 3.3% 세금 계산기</a><a href="../parental-leave/">육아휴직 급여 계산기</a><a href="../salary-table/">2026 연봉 실수령액 표</a><a href="../salary-2027/">2027 연봉 실수령액 예상</a><a href="../insurance-rates/">2026 4대보험 요율표</a></nav>
+<footer class="foot">
+  <p>재료비만 계산합니다. 인건비, 임대료, 수수료, 부가세는 포함하지 않았습니다. 입력한 내용은 이 기기에만 저장됩니다.</p>
+  <p>기준: 2026년 11월 현재 시행 중인 요율과 세법 · <a href="../">장사 도우미 전체 보기</a></p>
+</footer>
+</main>
+<script>
+(function () {
+  var KEY = "menu-cost-v1";
+  var DEF = [["돼지고기 앞다리", 89000, 10000, 80], ["김치", 22000, 10000, 150], ["두부", 1500, 300, 75], ["대파·양념", 5000, 1000, 30], ["공깃밥", 55000, 20000, 110]];
+  var box = document.getElementById("ings");
+  function num(s) { return Number(String(s).replace(/[^0-9.]/g, "")) || 0; }
+  function comma(n) { return n === "" ? "" : Number(n).toLocaleString("ko-KR"); }
+  function won(n) { return Math.round(n).toLocaleString("ko-KR") + "원"; }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function rowHtml(r, i) {
+    return '<div class="ing" data-i="' + i + '">' +
+      '<div class="ing-head"><input class="nm" type="text" aria-label="재료 이름" placeholder="재료 이름" value="' + esc(r[0]) + '"><button type="button" class="del" aria-label="이 재료 삭제">삭제</button></div>' +
+      '<div class="ing-grid">' +
+      '<label>구매 가격<span class="inputwrap sm"><input class="mny pc" type="text" inputmode="numeric" value="' + comma(r[1]) + '"><span class="unit">원</span></span></label>' +
+      '<label>구매 단위<span class="inputwrap sm"><input class="mny pu" type="text" inputmode="decimal" value="' + comma(r[2]) + '"></span></label>' +
+      '<label>1인분 사용량<span class="inputwrap sm"><input class="mny us" type="text" inputmode="decimal" value="' + comma(r[3]) + '"></span></label>' +
+      '</div><p class="ing-cost"></p></div>';
+  }
+  function read() {
+    return Array.prototype.map.call(box.querySelectorAll(".ing"), function (el) {
+      return [el.querySelector(".nm").value, num(el.querySelector(".pc").value), num(el.querySelector(".pu").value), num(el.querySelector(".us").value)];
+    });
+  }
+  function draw(list) { box.innerHTML = list.map(rowHtml).join(""); }
+  function save(list) {
+    try { localStorage.setItem(KEY, JSON.stringify({ n: document.getElementById("mname").value, p: num(document.getElementById("price").value), l: list })); } catch (e) {}
+  }
+  function render() {
+    var list = read(), price = num(document.getElementById("price").value), total = 0;
+    Array.prototype.forEach.call(box.querySelectorAll(".ing"), function (el, i) {
+      var r = list[i], c = r[2] > 0 ? r[1] / r[2] * r[3] : 0;
+      total += c;
+      el.querySelector(".ing-cost").textContent = r[2] > 0 ? "1인분 " + won(c) : "구매 단위를 입력하세요";
+    });
+    var rate = price > 0 ? total / price * 100 : 0;
+    var b = document.getElementById("box");
+    b.className = "result" + (price > 0 && rate > 40 ? " minus" : "");
+    document.getElementById("rate").textContent = price > 0 ? rate.toFixed(1) + "%" : "판매가를 입력하세요";
+    document.getElementById("sub").textContent = price > 0 ? "한 그릇 팔면 재료비를 빼고 " + won(price - total) + " 남습니다" : "";
+    document.getElementById("rows").innerHTML =
+      '<li><span class="k">판매가</span><span class="v">' + won(price) + '</span></li>' +
+      '<li><span class="k">1인분 재료비</span><span class="v">' + won(total) + '</span></li>' +
+      '<li class="sum"><span class="k">재료비를 뺀 금액</span><span class="v">' + won(price - total) + '</span></li>' +
+      '<li><span class="k">하루 50그릇 팔 때 <small>재료비를 뺀 금액</small></span><span class="v">' + won((price - total) * 50) + '</span></li>';
+    document.getElementById("targets").innerHTML = [30, 35, 40].map(function (t) {
+      var need = total / (t / 100), up = Math.ceil(need / 100) * 100;
+      return '<li><span class="k">원가율 ' + t + '%</span><span class="v">' + won(up) + '</span></li>';
+    }).join("");
+    save(list);
+  }
+  var start = DEF;
+  try {
+    var s = JSON.parse(localStorage.getItem(KEY) || "null");
+    if (s && s.l && s.l.length) { start = s.l; document.getElementById("mname").value = s.n || ""; document.getElementById("price").value = comma(s.p || 0); }
+  } catch (e) {}
+  draw(start);
+  document.addEventListener("input", function (e) {
+    var t = e.target;
+    if (t.classList && t.classList.contains("mny")) {
+      var raw = String(t.value).replace(/[^0-9.]/g, "");
+      if (raw !== "" && raw.slice(-1) !== ".") t.value = comma(raw);
+    }
+    render();
+  });
+  box.addEventListener("click", function (e) {
+    if (e.target.classList.contains("del")) { var l = read(); l.splice(Number(e.target.closest(".ing").getAttribute("data-i")), 1); draw(l); render(); }
+  });
+  document.getElementById("add").addEventListener("click", function () { var l = read(); l.push(["", 0, 0, 0]); draw(l); render(); var n = box.querySelectorAll(".nm"); n[n.length - 1].focus(); });
+  render();
+})();
+</script>
+</body>
+</html>
